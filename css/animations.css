@@ -1,0 +1,120 @@
+/**
+ * PULSE Micro-Animations & Dynamic Feedback
+ * Fast, tasteful animations for XP increases, level-ups, victory events, and streaks
+ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Floating XP Gain Floater */
+.xp-floater {
+  position: fixed;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--accent-cyan);
+  text-shadow: 0 0 15px var(--accent-cyan);
+  pointer-events: none;
+  z-index: 200;
+  animation: floatUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.7);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-20px) scale(1.1);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(-60px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-90px) scale(0.9);
+  }
+}
+
+/* Level Up Flash Aura */
+.level-up-flash {
+  animation: levelUpAura 1.5s ease-out;
+}
+
+@keyframes levelUpAura {
+  0% {
+    box-shadow: 0 0 0 rgba(0, 240, 255, 0);
+  }
+  30% {
+    box-shadow: 0 0 40px rgba(0, 240, 255, 0.8), inset 0 0 20px rgba(0, 240, 255, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(0, 240, 255, 0);
+  }
+}
+
+/* Subtle Streak Fire Pulse */
+.streak-pulse {
+  display: inline-flex;
+  align-items: center;
+  animation: streakFlame 2s infinite ease-in-out;
+}
+
+@keyframes streakFlame {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 4px rgba(255, 138, 0, 0.4));
+  }
+  50% {
+    transform: scale(1.08);
+    filter: drop-shadow(0 0 10px rgba(255, 138, 0, 0.8));
+  }
+}
+
+/* Trophy Shimmer for History & Victories */
+.trophy-shimmer {
+  animation: trophyShine 3s infinite ease-in-out;
+}
+
+@keyframes trophyShine {
+  0%, 100% {
+    transform: rotate(0deg);
+    filter: drop-shadow(0 0 6px rgba(255, 184, 0, 0.5));
+  }
+  50% {
+    transform: rotate(4deg) scale(1.05);
+    filter: drop-shadow(0 0 16px rgba(255, 184, 0, 0.9));
+  }
+}

@@ -1,0 +1,100 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isBattleParticipant(battleData) {
+      return isAuthenticated() && (
+        request.auth.uid == battleData.user1Id ||
+        request.auth.uid == battleData.user2Id ||
+        request.auth.uid in battleData.participants
+      );
+    }
+
+    // User Profiles
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId);
+      allow delete: if false; // Profiles are persistent
+
+      // User XP Transactions Subcollection
+      match /xpTransactions/{transactionId} {
+        allow read: if isAuthenticated();
+        allow create: if isOwner(userId)
+          && request.resource.data.userId == userId
+          && request.resource.data.amount is number
+          && request.resource.data.type in [
+            'STUDY_HOUR', 'POMODORO', 'TASK', 'HOMEWORK',
+            'WEEKLY_EXAM', 'MONTHLY_EXAM', 'STREAK_MILESTONE',
+            'BATTLE_WIN', 'BATTLE_CLOSE_LOSS'
+          ];
+        allow update: if isOwner(userId)
+          && request.resource.data.userId == userId
+          && request.resource.data.amount is number;
+        allow delete: if isOwner(userId);
+      }
+
+      // User Notifications Subcollection
+      match /notifications/{notificationId} {
+        allow read: if isOwner(userId);
+        allow create: if isAuthenticated(); // Allowed so other users/triggers can send invites
+        allow update: if isOwner(userId);
+        allow delete: if isOwner(userId);
+      }
+    }
+
+    // Unique Username Registry
+    match /usernames/{username} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && !exists(/databases/$(database)/documents/usernames/$(username));
+      allow update, delete: if false;
+    }
+
+    // Battle Invites
+    match /battleInvites/{inviteId} {
+      allow read: if isAuthenticated() && (
+        request.auth.uid == resource.data.fromUserId ||
+        request.auth.uid == resource.data.toUserId ||
+        request.auth.token.email != null
+      );
+      allow create: if isAuthenticated()
+        && request.resource.data.fromUserId == request.auth.uid
+        && request.resource.data.status == 'PENDING';
+      allow update: if isAuthenticated() && (
+        request.auth.uid == resource.data.toUserId ||
+        request.auth.uid == resource.data.fromUserId
+      );
+      allow delete: if isAuthenticated() && (
+        request.auth.uid == resource.data.fromUserId ||
+        request.auth.uid == resource.data.toUserId
+      );
+    }
+
+    // Battles
+    match /battles/{battleId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && (
+        request.auth.uid == request.resource.data.user1Id ||
+        request.auth.uid == request.resource.data.user2Id
+      );
+      allow update: if isAuthenticated() && isBattleParticipant(resource.data);
+      allow delete: if false;
+
+      // Weekly Rounds Subcollection
+      match /rounds/{roundId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if false;
+      }
+    }
+  }
+}

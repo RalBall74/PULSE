@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PULSE Engine Test Runner</title>
+  <style>
+    body { font-family: monospace; background: #0A0D14; color: #F3F5FA; padding: 24px; }
+    h1 { color: #00F0FF; }
+    #output { background: #121824; padding: 20px; border-radius: 8px; border: 1px solid #233048; white-space: pre-wrap; font-size: 14px; line-height: 1.6; }
+  </style>
+</head>
+<body>
+  <h1>🧪 PULSE Engine Verification Test Runner</h1>
+  <div id="output">Running tests...</div>
+
+  <script src="../js/pulse.bundle.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const outEl = document.getElementById('output');
+      outEl.textContent = '';
+      const origLog = console.log;
+      const origErr = console.error;
+
+      console.log = (...args) => {
+        origLog(...args);
+        outEl.textContent += args.join(' ') + '\n';
+      };
+      console.error = (...args) => {
+        origErr(...args);
+        outEl.textContent += '[ERROR] ' + args.join(' ') + '\n';
+      };
+
+      const { XpEngine, StreakEngine, BattleEngine, TransactionManager } = window.PulseEngine;
+
+      console.log('🧪 Starting PULSE Engine Verification Tests...');
+      let passed = 0, failed = 0;
+      function assert(cond, msg) {
+        if (cond) { passed++; console.log('  ✓ PASS: ' + msg); }
+        else { failed++; console.error('  ✗ FAIL: ' + msg); }
+      }
+
+      // 1. Level System
+      assert(XpEngine.calculateLevel(0).level === 1, '0 XP is Level 1');
+      assert(XpEngine.calculateLevel(499).level === 1, '499 XP is Level 1');
+      assert(XpEngine.calculateLevel(500).level === 2, '500 XP is Level 2');
+      assert(XpEngine.calculateLevel(1250).progressPercentage === 50, '1250 XP has 50% level progress');
+
+      // 2. XP Formulas
+      assert(XpEngine.calculateActionXP('STUDY_HOUR') === 25, '1 Study Hour = +25 XP');
+      assert(XpEngine.calculateActionXP('POMODORO', { count: 1 }) === 0, '1 Pomodoro = 0 XP');
+      assert(XpEngine.calculateActionXP('POMODORO', { count: 2 }) === 25, '2 Pomodoros = +25 XP');
+      assert(XpEngine.calculateActionXP('TASK', { difficulty: 'EASY' }) === 10, 'Easy Task = 10 XP');
+      assert(XpEngine.calculateActionXP('TASK', { difficulty: 'MEDIUM' }) === 20, 'Medium Task = 20 XP');
+      assert(XpEngine.calculateActionXP('TASK', { difficulty: 'HARD' }) === 30, 'Hard Task = 30 XP');
+      assert(XpEngine.calculateActionXP('HOMEWORK', { isPerfect: true }) === 10, 'Perfect Homework = 10 XP');
+      assert(XpEngine.calculateActionXP('HOMEWORK', { isPerfect: false }) === 1, 'Imperfect Homework = 1 XP');
+      assert(XpEngine.calculateActionXP('WEEKLY_EXAM', { isFullScore: true }) === 30, 'Perfect Weekly Exam = 30 XP');
+      assert(XpEngine.calculateActionXP('WEEKLY_EXAM', { isFullScore: false }) === 3, 'Imperfect Weekly Exam = 3 XP');
+      assert(XpEngine.calculateActionXP('MONTHLY_EXAM', { isFullScore: true }) === 75, 'Perfect Monthly Exam = 75 XP');
+      assert(XpEngine.calculateActionXP('MONTHLY_EXAM', { isFullScore: false }) === 7.5, 'Imperfect Monthly Exam = 7.5 XP');
+
+      // 3. Streak & Milestones
+      const now = new Date();
+      const tx1 = TransactionManager.createTransaction({ userId: 'u1', amount: 0, type: 'POMODORO', timestamp: new Date(now.getTime() - 86400000).toISOString() });
+      const tx2 = TransactionManager.createTransaction({ userId: 'u1', amount: 25, type: 'STUDY_HOUR', timestamp: now.toISOString() });
+      const streakRes = StreakEngine.calculateStreakFromTransactions([tx1, tx2], now);
+      assert(streakRes.currentStreak === 2, '2 active days = current streak 2');
+      assert(streakRes.isActiveToday === true, 'Activity today is true');
+
+      // 4. Battle & Round Resolution
+      const rel = BattleEngine.calculateRelativeProgress(150, 50);
+      assert(rel.userPercentage === 75 && rel.status === 'LEADING', '150 vs 50 XP is 75% and LEADING');
+      const winRes = BattleEngine.resolveRound(1, 300, 100, 'u1', 'u2');
+      assert(winRes.winnerId === 'u1' && winRes.user1BP === 200, 'Round win awards +200 BP');
+      const closeRes = BattleEngine.resolveRound(1, 300, 270, 'u1', 'u2');
+      assert(closeRes.user2Result === 'CLOSE_LOSS' && closeRes.user2BP === 50, 'Close loss awards +50 BP and +50 XP');
+
+      console.log(`\n========================================`);
+      console.log(`🏁 Total Tests: ${passed} Passed, ${failed} Failed`);
+      console.log(`========================================\n`);
+
+      if (failed === 0) {
+        outEl.textContent += '\n🎉 ALL AUTOMATED ENGINE TESTS PASSED PERFECTLY!\n';
+      }
+    });
+  </script>
+</body>
+</html>

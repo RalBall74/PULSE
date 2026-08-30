@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="PULSE - Competitive 1v1 season-long study battle platform. Track XP, levels, study streaks, weekly rounds, and Battle Points in head-to-head rivalry.">
+  <title>PULSE — Competitive 1v1 Season Battle & XP</title>
+
+  <!-- Preconnect to Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="./css/main.css">
+  <link rel="stylesheet" href="./css/layout.css">
+  <link rel="stylesheet" href="./css/components.css">
+  <link rel="stylesheet" href="./css/battle.css">
+  <link rel="stylesheet" href="./css/animations.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Top Sticky Header -->
+    <header class="top-header">
+      <div class="header-inner">
+        <!-- Brand Logo -->
+        <a href="#dashboard" class="logo-area" data-view="dashboard">
+          <div class="logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A0D14" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+          </div>
+          <span class="logo-text">PULSE</span>
+        </a>
+
+        <!-- Desktop Navigation Bar -->
+        <nav class="nav-links">
+          <button class="nav-item active" data-view="dashboard">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+            <span>Dashboard</span>
+          </button>
+          <button class="nav-item" data-view="battles">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <span>Battles</span>
+          </button>
+          <button class="nav-item" data-view="history">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span>History</span>
+          </button>
+          <button class="nav-item" data-view="profile">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>Profile</span>
+          </button>
+        </nav>
+
+        <!-- Header Actions -->
+        <div class="header-actions">
+          <!-- + Quick XP Trigger -->
+          <button class="btn-quick-xp-header" id="btn-header-quick-xp" title="Log XP Achievement">
+            <span>⚡</span>
+            <span class="text">+ Quick XP</span>
+          </button>
+
+          <!-- Audio Cue Toggle -->
+          <button class="btn-icon" id="btn-toggle-sound" title="Toggle Sound Effects">
+            🔊
+          </button>
+
+          <!-- Theme Toggle -->
+          <button class="btn-icon" id="btn-toggle-theme" title="Toggle Dark/Light Theme">
+            🌓
+          </button>
+
+          <!-- Notification Bell -->
+          <button class="btn-icon" id="btn-notif-bell" title="Notifications">
+            🔔
+            <span class="notif-badge" id="notif-badge-indicator" style="display: none;"></span>
+          </button>
+
+          <!-- User Chip / Login -->
+          <button class="btn-icon" id="btn-header-user" style="width: auto; padding: 4px 10px; height: 40px;" title="Account Menu">
+            <span class="badge badge-cyan">Sign In</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Notification Dropdown Menu -->
+      <div class="notif-dropdown" id="notif-dropdown-menu"></div>
+    </header>
+
+    <!-- Main View Container -->
+    <main class="main-content">
+      <!-- 1. Dashboard View -->
+      <section id="view-dashboard" class="view-section active"></section>
+
+      <!-- 2. Battles View -->
+      <section id="view-battles" class="view-section"></section>
+
+      <!-- 3. History View -->
+      <section id="view-history" class="view-section"></section>
+
+      <!-- 4. Profile View -->
+      <section id="view-profile" class="view-section"></section>
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+      <button class="mobile-nav-item active" data-view="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+        <span>Dashboard</span>
+      </button>
+      <button class="mobile-nav-item" data-view="battles">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+        <span>Battles</span>
+      </button>
+      <button class="mobile-nav-item" data-view="history">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span>History</span>
+      </button>
+      <button class="mobile-nav-item" data-view="profile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <span>Profile</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- 1. Quick XP Modal -->
+  <div class="modal-backdrop" id="modal-quick-xp">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">⚡ Quick XP Action</div>
+        <button class="btn-close">&times;</button>
+      </div>
+
+      <!-- Action Selection Tabs -->
+      <div style="display: flex; gap: 6px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 4px;">
+        <button class="btn btn-secondary btn-sm xp-action-tab active" data-action="STUDY_HOUR">⏱️ Study Hr</button>
+        <button class="btn btn-secondary btn-sm xp-action-tab" data-action="POMODORO">🍅 Pomodoro</button>
+        <button class="btn btn-secondary btn-sm xp-action-tab" data-action="TASK">📋 Task</button>
+        <button class="btn btn-secondary btn-sm xp-action-tab" data-action="HOMEWORK">📝 Homework</button>
+        <button class="btn btn-secondary btn-sm xp-action-tab" data-action="WEEKLY_EXAM">🏆 Weekly</button>
+        <button class="btn btn-secondary btn-sm xp-action-tab" data-action="MONTHLY_EXAM">🎖️ Monthly</button>
+      </div>
+
+      <!-- Form 1: Study Hour (+25 XP) -->
+      <form id="form-study-hour" class="xp-form-panel" data-action="STUDY_HOUR">
+        <div style="background: var(--bg-primary); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: 16px;">
+          <div style="font-weight: 700; font-size: 0.95rem;">Continuous Study Hour</div>
+          <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px;">
+            1 continuous hour awards <strong>+25 XP</strong> and maintains your Study Streak.
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hours Completed</label>
+          <input type="number" class="form-input" name="hours" value="1" min="1" max="12" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes (Optional)</label>
+          <input type="text" class="form-input" name="notes" placeholder="e.g. Physics lecture revision">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">+ Log Study Hour (+25 XP)</button>
+      </form>
+
+      <!-- Form 2: Pomodoro Session -->
+      <form id="form-pomodoro" class="xp-form-panel" data-action="POMODORO" style="display: none;">
+        <div style="background: var(--bg-primary); padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: 16px;">
+          <div style="font-weight: 700; font-size: 0.95rem;">Pomodoro Session</div>
+          <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 2px;">
+            1 Pomodoro = <strong>0 XP</strong> (Preserves Streak). 2 Pomodoros = <strong>+25 XP</strong>.
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Number of Pomodoros Completed</label>
+          <input type="number" class="form-input" name="count" value="1" min="1" max="20" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes (Optional)</label>
+          <input type="text" class="form-input" name="notes" placeholder="e.g. 25 min focus block">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Log Pomodoro Session</button>
+      </form>
+
+      <!-- Form 3: Task (Easy 10, Medium 20, Hard 30) -->
+      <form id="form-task" class="xp-form-panel" data-action="TASK" style="display: none;">
+        <div class="form-group">
+          <label class="form-label">Task Difficulty / Value</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+            <label style="background: var(--bg-primary); border: 1px solid var(--border-medium); border-radius: var(--radius-md); padding: 10px; text-align: center; cursor: pointer;">
+              <input type="radio" name="difficulty" value="EASY" style="margin-bottom: 4px;">
+              <div style="font-weight: 700; font-size: 0.88rem;">Easy</div>
+              <div style="font-size: 0.75rem; color: var(--accent-cyan);">+10 XP</div>
+            </label>
+            <label style="background: var(--bg-primary); border: 1px solid var(--border-medium); border-radius: var(--radius-md); padding: 10px; text-align: center; cursor: pointer;">
+              <input type="radio" name="difficulty" value="MEDIUM" checked style="margin-bottom: 4px;">
+              <div style="font-weight: 700; font-size: 0.88rem;">Medium</div>
+              <div style="font-size: 0.75rem; color: var(--accent-cyan);">+20 XP</div>
+            </label>
+            <label style="background: var(--bg-primary); border: 1px solid var(--border-medium); border-radius: var(--radius-md); padding: 10px; text-align: center; cursor: pointer;">
+              <input type="radio" name="difficulty" value="HARD" style="margin-bottom: 4px;">
+              <div style="font-weight: 700; font-size: 0.88rem;">Hard</div>
+              <div style="font-size: 0.75rem; color: var(--accent-cyan);">+30 XP</div>
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Task Description</label>
+          <input type="text" class="form-input" name="notes" placeholder="e.g. Chapter 4 problem set" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">+ Log Task XP</button>
+      </form>
+
+      <!-- Form 4: Homework (Perfect? Yes 10 / No 1) -->
+      <form id="form-homework" class="xp-form-panel" data-action="HOMEWORK" style="display: none;">
+        <div class="form-group">
+          <label class="form-label">Was the homework perfect?</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <label style="background: var(--bg-primary); border: 1px solid var(--border-medium); border-radius: var(--radius-md); padding: 12px; text-align: center; cursor: pointer;">
+              <input type="radio" name="isPerfect" value="true" checked style="margin-bottom: 4px;">
+              <div style="font-weight: 700;">YES, Perfect! ✨</div>
+              <div style="font-size: 0.8rem; color: var(--accent-emerald);">+10 XP</div>
+            </label>
+            <label style="background: var(--bg-primary); border: 1px solid var(--border-medium); border-radius: var(--radius-md); padding: 12px; text-align: center; cursor: pointer;">
+              <input type="radio" name="isPerfect" value="false" style="margin-bottom: 4px;">
+              <div style="font-weight: 700;">Had Mistakes</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">+1 XP</div>
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subject / Assignment</label>
+          <input type="text" class="form-input" name="notes" placeholder="e.g. Calculus Assignment #3">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">+ Log Homework</button>
+      </form>
+
+      <!-- Form 5: Weekly Exam (Full Score? Yes 30 / No 3) -->
+      <form id="form-weekly-exam" class="xp-form-panel" data-action="WEEKLY_EXAM" style="display: none;">
+        <div class="form-group">
+          <label class="form-label">Did you achieve a full score?</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <label style="background: var(--bg-primary); border: 1px solid var(--border-medium); border-radius: var(--radius-md); padding: 12px; text-align: center; cursor: pointer;">
+              <input type="radio" name="isFullScore" value="true" checked style="margin-bottom: 4px;">
+              <div style="font-weight: 700;">YES (Full Score 🏆)</div>
+              <div style="font-size: 0.8rem; color: var(--accent-emerald);">+30 XP</div>
+            </label>
+            <label style="background: var(--bg-primary); border: 1px solid var(--border-medium); border-radius: var(--radius-md); padding: 12px; text-align: center; cursor: pointer;">
+              <input type="radio" name="isFullScore" value="false" style="margin-bottom: 4px;">
+              <div style="font-weight: 700;">Partial Score</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">+3 XP</div>
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Exam Notes</label>
+          <input type="text" class="form-input" name="notes" placeholder="e.g. Week 4 Quiz">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">+ Log Weekly Exam</button>
+      </form>
+
+      <!-- Form 6: Monthly Exam (Full Score? Yes 75 / No 7.5) -->
+      <form id="form-monthly-exam" class="xp-form-panel" data-action="MONTHLY_EXAM" style="display: none;">
+        <div class="form-group">
+          <label class="form-label">Did you achieve a full score?</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <label style="background: var(--bg-primary); border: 1px solid var(--border-medium); border-radius: var(--radius-md); padding: 12px; text-align: center; cursor: pointer;">
+              <input type="radio" name="isFullScore" value="true" checked style="margin-bottom: 4px;">
+              <div style="font-weight: 700;">YES (Full Score 🎖️)</div>
+              <div style="font-size: 0.8rem; color: var(--accent-emerald);">+75 XP</div>
+            </label>
+            <label style="background: var(--bg-primary); border: 1px solid var(--border-medium); border-radius: var(--radius-md); padding: 12px; text-align: center; cursor: pointer;">
+              <input type="radio" name="isFullScore" value="false" style="margin-bottom: 4px;">
+              <div style="font-weight: 700;">Partial Score</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted);">+7.5 XP</div>
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Exam Notes</label>
+          <input type="text" class="form-input" name="notes" placeholder="e.g. Midterm Examination">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">+ Log Monthly Exam</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Battle Invite & Rival Search Modal -->
+  <div class="modal-backdrop" id="modal-invite">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">⚔️ 1v1 Battle Arena</div>
+        <button class="btn-close">&times;</button>
+      </div>
+
+      <div id="invite-actions-section">
+        <!-- Search Rival Form -->
+        <div class="form-group">
+          <label class="form-label">Search Rival by Username</label>
+          <form id="form-search-user" style="display: flex; gap: 8px;">
+            <input type="text" class="form-input" id="input-search-username" placeholder="Enter exact username..." required>
+            <button type="submit" class="btn btn-primary btn-sm">Find</button>
+          </form>
+          <div id="invite-search-results" style="margin-top: 10px;"></div>
+        </div>
+
+        <!-- Incoming Challenges -->
+        <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-subtle);">
+          <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 10px;">Incoming Battle Challenges</div>
+          <div id="pending-invites-container"></div>
+        </div>
+      </div>
+
+      <!-- Battle Setup Section (Shown after accepting) -->
+      <div id="battle-setup-section" style="display: none;">
+        <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 12px;">Configure Season Battle</div>
+        <form id="form-battle-setup">
+          <input type="hidden" name="acceptedInviteId">
+          <div class="form-group">
+            <label class="form-label">Battle Season Name</label>
+            <input type="text" class="form-input" name="battleName" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Start Date (Round 1 begins)</label>
+            <input type="date" class="form-input" name="startDate" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">End Date (Optional)</label>
+            <input type="date" class="form-input" name="endDate">
+            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">
+              Leave blank to continue until one player clicks "End Battle".
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button type="button" class="btn btn-secondary btn-block" id="btn-cancel-setup">Back</button>
+            <button type="submit" class="btn btn-primary btn-block">Activate Season ⚔️</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Edit / Delete Transaction Modal -->
+  <div class="modal-backdrop" id="modal-transaction-edit">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">✏️ Edit XP Transaction</div>
+        <button class="btn-close">&times;</button>
+      </div>
+
+      <form id="form-edit-transaction">
+        <input type="hidden" name="txId">
+        <div class="form-group">
+          <label class="form-label">Transaction Type</label>
+          <select class="form-select" name="txType">
+            <option value="STUDY_HOUR">STUDY_HOUR (Study Hour)</option>
+            <option value="POMODORO">POMODORO (Pomodoro Session)</option>
+            <option value="TASK">TASK (Task Completed)</option>
+            <option value="HOMEWORK">HOMEWORK (Homework)</option>
+            <option value="WEEKLY_EXAM">WEEKLY_EXAM (Weekly Exam)</option>
+            <option value="MONTHLY_EXAM">MONTHLY_EXAM (Monthly Exam)</option>
+            <option value="STREAK_MILESTONE">STREAK_MILESTONE (Milestone Bonus)</option>
+            <option value="BATTLE_WIN">BATTLE_WIN (Round Victory)</option>
+            <option value="BATTLE_CLOSE_LOSS">BATTLE_CLOSE_LOSS (Close Fight)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">XP Amount</label>
+          <input type="number" step="0.5" class="form-input" name="txAmount" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes / Description</label>
+          <input type="text" class="form-input" name="notes">
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+          <button type="button" class="btn btn-danger" id="btn-delete-tx" style="flex: 1;">Delete 🗑️</button>
+          <button type="submit" class="btn btn-primary" style="flex: 2;">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. Auth Modal (Username + Password only) -->
+  <div class="modal-backdrop" id="modal-auth">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="auth-modal-title">Sign In to PULSE</div>
+        <button class="btn-close">&times;</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="form-login">
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" class="form-input" name="username" placeholder="e.g. ApexLegend" autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-input" name="password" placeholder="••••••••" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="form-register" style="display: none;">
+        <div class="form-group">
+          <label class="form-label">Choose Unique Username</label>
+          <input type="text" class="form-input" name="username" placeholder="e.g. ShadowRival" autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password (Min 6 characters)</label>
+          <input type="password" class="form-input" name="password" placeholder="••••••••" autocomplete="new-password" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <input type="password" class="form-input" name="confirmPassword" placeholder="••••••••" autocomplete="new-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+      </form>
+
+      <div id="auth-toggle-prompt" style="text-align: center; margin-top: 16px; font-size: 0.85rem; color: var(--text-secondary);">
+        Don't have an account? <a href="#" id="btn-toggle-register" style="color: var(--accent-cyan); font-weight: 700;">Register</a>
+      </div>
+
+      <!-- Instant Demo Switcher for seamless testing -->
+      <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-subtle);">
+        <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 8px; text-align: center;">
+          ⚡ Quick Demo Rival Accounts
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <button type="button" class="btn btn-secondary btn-sm btn-quick-demo-user" data-username="ApexLegend">
+            👤 ApexLegend
+          </button>
+          <button type="button" class="btn btn-secondary btn-sm btn-quick-demo-user" data-username="VortexStriker">
+            👤 VortexStriker
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast and Floater Layer -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Universal PULSE Application Engine (Works on file:// and HTTP/HTTPS) -->
+  <script src="./js/pulse.bundle.js"></script>
+</body>
+</html>
