@@ -115,23 +115,5 @@ export const AuthView = {
       });
     }
 
-    // Demo Switcher Accounts (ApexLegend & VortexStriker)
-    modalEl.querySelectorAll('.btn-quick-demo-user').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const username = btn.dataset.username;
-        try {
-          const user = await DatabaseService.getUserByUsername(username);
-          if (user) {
-            await AuthService.switchUser(user);
-            SoundService.playClick();
-            Toast.success('Switched Account', `Logged in as demo rival ${username}`);
-            this.close();
-            window.dispatchEvent(new CustomEvent('pulse_state_updated'));
-          }
-        } catch (err) {
-          Toast.error('Switch Failed', err.message);
-        }
-      });
-    });
-  }
-};
+    }
+  };

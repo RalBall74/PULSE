@@ -838,123 +838,23 @@
   };
 
   function ensureSeedData() {
-    const users = Storage.get(TABLES.USERS, null);
-    if (!users) {
-      const demoUser1 = {
-        uid: 'user_apex',
-        username: 'ApexLegend',
-        passwordHash: btoa('password123'),
-        level: 4,
-        totalXP: 1750,
-        currentStreak: 7,
-        longestStreak: 14,
-        wins: 2,
-        losses: 0,
-        activeBattleId: 'battle_demo_1',
-        reminderTime: '20:00',
-        createdAt: new Date(Date.now() - 14 * 86400000).toISOString()
-      };
-
-      const demoUser2 = {
-        uid: 'user_vortex',
-        username: 'VortexStriker',
-        passwordHash: btoa('password123'),
-        level: 3,
-        totalXP: 1425,
-        currentStreak: 5,
-        longestStreak: 9,
-        wins: 1,
-        losses: 1,
-        activeBattleId: 'battle_demo_1',
-        reminderTime: '21:00',
-        createdAt: new Date(Date.now() - 14 * 86400000).toISOString()
-      };
-
-      const battleStart = new Date(Date.now() - 10 * 86400000).toISOString();
-      const demoBattle = {
-        id: 'battle_demo_1',
-        name: 'Season 1 Grand Rivalry',
-        user1Id: demoUser1.uid,
-        user1Username: demoUser1.username,
-        user2Id: demoUser2.uid,
-        user2Username: demoUser2.username,
-        participants: [demoUser1.uid, demoUser2.uid],
-        startDate: battleStart,
-        endDate: null,
-        status: 'ACTIVE',
-        currentRound: 2,
-        user1TotalBP: 200,
-        user2TotalBP: 50,
-        user1RoundsWon: 1,
-        user2RoundsWon: 0,
-        createdAt: battleStart
-      };
-
-      const round1Bounds = calculateRoundBounds(battleStart, 1);
-      const demoRound1 = {
-        id: 'round_demo_1_r1',
-        battleId: demoBattle.id,
-        roundNumber: 1,
-        startDate: round1Bounds.startDate,
-        endDate: round1Bounds.endDate,
-        status: 'COMPLETED',
-        user1Id: demoUser1.uid,
-        user2Id: demoUser2.uid,
-        user1XP: 350,
-        user2XP: 310,
-        winnerId: demoUser1.uid,
-        user1BP: 200,
-        user2BP: 50,
-        user1Result: 'WIN',
-        user2Result: 'CLOSE_LOSS',
-        resolvedAt: round1Bounds.endDate
-      };
-
-      const round2Bounds = calculateRoundBounds(battleStart, 2);
-      const demoRound2 = {
-        id: 'round_demo_1_r2',
-        battleId: demoBattle.id,
-        roundNumber: 2,
-        startDate: round2Bounds.startDate,
-        endDate: round2Bounds.endDate,
-        status: 'ACTIVE',
-        user1Id: demoUser1.uid,
-        user2Id: demoUser2.uid,
-        user1XP: 125,
-        user2XP: 100
-      };
-
-      const tx1 = TransactionManager.createTransaction({
-        userId: demoUser1.uid,
-        amount: 25,
-        type: 'STUDY_HOUR',
-        metadata: { notes: 'Deep math practice' },
-        timestamp: new Date().toISOString()
-      });
-      const tx2 = TransactionManager.createTransaction({
-        userId: demoUser1.uid,
-        amount: 30,
-        type: 'TASK',
-        metadata: { difficulty: 'HARD' },
-        timestamp: new Date(Date.now() - 3600000).toISOString()
-      });
-
-      Storage.set(TABLES.USERS, [demoUser1, demoUser2]);
-      Storage.set(TABLES.BATTLES, [demoBattle]);
-      Storage.set(TABLES.ROUNDS, [demoRound1, demoRound2]);
-      Storage.set(TABLES.TRANSACTIONS, [tx1, tx2]);
-      Storage.set(TABLES.INVITES, []);
-      Storage.set(TABLES.NOTIFICATIONS, [
-        {
-          id: 'notif_welcome',
-          userId: demoUser1.uid,
-          title: 'Welcome to PULSE',
-          message: 'Your 1v1 battle against VortexStriker is live. Log XP to lead the round!',
-          type: 'SYSTEM',
-          read: false,
-          createdAt: new Date().toISOString()
-        }
-      ]);
+    // Clean out legacy demo accounts if they were cached previously
+    const users = Storage.get(TABLES.USERS, []);
+    const filteredUsers = users.filter(u => u.uid !== 'user_apex' && u.uid !== 'user_vortex');
+    if (filteredUsers.length !== users.length) {
+      Storage.set(TABLES.USERS, filteredUsers);
+      const battles = Storage.get(TABLES.BATTLES, []).filter(b => b.id !== 'battle_demo_1');
+      Storage.set(TABLES.BATTLES, battles);
+      const rounds = Storage.get(TABLES.ROUNDS, []).filter(r => r.battleId !== 'battle_demo_1');
+      Storage.set(TABLES.ROUNDS, rounds);
+      const txs = Storage.get(TABLES.TRANSACTIONS, []).filter(t => t.userId !== 'user_apex' && t.userId !== 'user_vortex');
+      Storage.set(TABLES.TRANSACTIONS, txs);
+      const notifs = Storage.get(TABLES.NOTIFICATIONS, []).filter(n => n.id !== 'notif_welcome');
+      Storage.set(TABLES.NOTIFICATIONS, notifs);
+      const curSession = Storage.get('current_session');
+      if (curSession && (curSession.uid === 'user_apex' || curSession.uid === 'user_vortex')) {
+        Storage.remove('current_session');
+      }
     }
   }
 
@@ -1322,12 +1222,7 @@
       if (cachedUser) {
         currentUser = cachedUser;
       } else {
-        // Auto sign-in demo user ApexLegend if fresh
-        const defaultUser = await DatabaseService.getUserByUsername('ApexLegend');
-        if (defaultUser) {
-          currentUser = defaultUser;
-          Storage.set('current_session', defaultUser);
-        }
+        currentUser = null;
       }
       notifyAuthChange(currentUser);
       return currentUser;
@@ -2242,18 +2137,6 @@
         });
       }
 
-      modalEl.querySelectorAll('.btn-quick-demo-user').forEach(btn => {
-        btn.addEventListener('click', async () => {
-          const user = await DatabaseService.getUserByUsername(btn.dataset.username);
-          if (user) {
-            await AuthService.switchUser(user);
-            SoundService.playClick();
-            Toast.success('Switched Account', `Logged in as ${user.username}`);
-            this.close();
-            window.dispatchEvent(new CustomEvent('pulse_state_updated'));
-          }
-        });
-      });
     }
   };
 

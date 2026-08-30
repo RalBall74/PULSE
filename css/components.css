@@ -1,6 +1,6 @@
 /**
  * PULSE Component Styles
- * Cards, Buttons, Modals, Dropdowns, Forms, Toast Notifications, and Empty States
+ * Responsive Cards, Buttons, Modals, Dropdowns, Forms, Toast Notifications, and Empty States
  */
 
 /* Cards & Glass Panels */
@@ -8,12 +8,14 @@
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  padding: 20px;
+  padding: 18px;
   position: relative;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow: var(--shadow-sm);
   transition: border-color var(--transition-fast), transform var(--transition-fast);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .card:hover {
@@ -24,12 +26,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
-  gap: 12px;
+  margin-bottom: 14px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .card-title {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -41,17 +44,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 10px 20px;
+  gap: 6px;
+  padding: 9px 18px;
   font-family: var(--font-display);
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   font-weight: 700;
   border-radius: var(--radius-md);
   border: 1px solid transparent;
   cursor: pointer;
   transition: all var(--transition-fast);
   text-decoration: none;
-  line-height: 1;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .btn-primary {
@@ -90,7 +94,7 @@
 
 .btn-sm {
   padding: 6px 12px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   border-radius: var(--radius-sm);
 }
 
@@ -109,7 +113,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 16px;
   opacity: 0;
   visibility: hidden;
   transition: all var(--transition-fast);
@@ -124,14 +128,15 @@
   background: var(--bg-secondary);
   border: 1px solid var(--border-medium);
   border-radius: var(--radius-xl);
-  max-width: 520px;
+  max-width: 500px;
   width: 100%;
-  padding: 28px;
+  padding: 24px 20px;
   box-shadow: var(--shadow-lg);
-  transform: scale(0.95) translateY(10px);
+  transform: scale(0.96) translateY(10px);
   transition: transform var(--transition-bounce);
   max-height: 90vh;
   overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .modal-backdrop.open .modal-content {
@@ -142,11 +147,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .modal-title {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 700;
 }
 
@@ -168,15 +173,16 @@
 
 /* Forms & Inputs */
 .form-group {
-  margin-bottom: 18px;
+  margin-bottom: 16px;
+  width: 100%;
 }
 
 .form-label {
   display: block;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: var(--text-secondary);
-  margin-bottom: 6px;
+  margin-bottom: 5px;
 }
 
 .form-input, .form-select {
@@ -184,11 +190,12 @@
   background: var(--bg-primary);
   border: 1px solid var(--border-medium);
   border-radius: var(--radius-md);
-  padding: 12px 14px;
+  padding: 11px 13px;
   color: var(--text-primary);
   font-family: var(--font-sans);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   outline: none;
+  box-sizing: border-box;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
@@ -200,10 +207,10 @@
 /* Notification Dropdown */
 .notif-dropdown {
   position: absolute;
-  top: 72px;
-  right: 20px;
-  width: 360px;
-  max-width: calc(100vw - 40px);
+  top: 64px;
+  right: 16px;
+  width: 340px;
+  max-width: calc(100vw - 32px);
   background: var(--bg-secondary);
   border: 1px solid var(--border-medium);
   border-radius: var(--radius-lg);
@@ -220,7 +227,7 @@
 }
 
 .notif-header {
-  padding: 14px 18px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--border-subtle);
   display: flex;
   align-items: center;
@@ -230,13 +237,13 @@
 }
 
 .notif-list {
-  max-height: 380px;
+  max-height: 360px;
   overflow-y: auto;
   list-style: none;
 }
 
 .notif-item {
-  padding: 12px 18px;
+  padding: 12px 16px;
   border-bottom: 1px solid var(--border-subtle);
   transition: background var(--transition-fast);
   cursor: pointer;
@@ -252,19 +259,19 @@
 }
 
 .notif-item-title {
-  font-size: 0.88rem;
+  font-size: 0.86rem;
   font-weight: 600;
   margin-bottom: 2px;
 }
 
 .notif-item-desc {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: var(--text-secondary);
   line-height: 1.4;
 }
 
 .notif-item-time {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
   margin-top: 4px;
 }
@@ -272,60 +279,64 @@
 /* Empty States */
 .empty-state {
   text-align: center;
-  padding: 48px 24px;
+  padding: 40px 20px;
   border: 1px dashed var(--border-medium);
   border-radius: var(--radius-xl);
   background: var(--bg-card);
+  width: 100%;
 }
 
 .empty-icon {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 16px;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 14px;
   color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-full);
   background: var(--bg-tertiary);
+  font-size: 1.5rem;
 }
 
 .empty-title {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .empty-subtitle {
   color: var(--text-secondary);
-  font-size: 0.9rem;
-  max-width: 380px;
-  margin: 0 auto 20px;
+  font-size: 0.88rem;
+  max-width: 400px;
+  margin: 0 auto 18px;
+  line-height: 1.45;
 }
 
 /* Toast Notifications */
 .toast-container {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: calc(20px + var(--safe-bottom));
+  right: 16px;
   z-index: 120;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   pointer-events: none;
+  max-width: calc(100vw - 32px);
 }
 
 .toast {
   background: var(--bg-secondary);
   border: 1px solid var(--border-medium);
   border-radius: var(--radius-md);
-  padding: 12px 18px;
-  min-width: 280px;
-  max-width: 380px;
+  padding: 10px 14px;
+  min-width: 260px;
+  max-width: 360px;
   box-shadow: var(--shadow-lg);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   pointer-events: auto;
   animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -341,4 +352,20 @@
 
 .toast-error {
   border-left: 4px solid var(--accent-crimson);
+}
+
+@media (max-width: 480px) {
+  .toast-container {
+    left: 12px;
+    right: 12px;
+    bottom: calc(70px + var(--safe-bottom));
+  }
+  .toast {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+  .modal-content {
+    padding: 20px 14px;
+  }
 }
